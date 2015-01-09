@@ -1,7 +1,7 @@
 /* 
- * boot.img²Ù×÷
- * -u in_file¡£½âÑ¹boot.img
- * -r out_file¡£ÖØĞÂ´ò°ü
+ * boot.imgæ“ä½œ
+ * -u in_fileã€‚è§£å‹boot.img
+ * -r out_fileã€‚é‡æ–°æ‰“åŒ…
  * wittered by boot
  * QQ:735718299
  *
@@ -88,7 +88,7 @@ void un_pack(char *file) {
 #endif
 
   long int kernel_size, ramdisk_size, sec_stage_size, page;
-  char k_s[4],r_s[4],s_s[4],pg[4]; /* ´´½¨ÊıÖµ´¢´æ*/
+  char k_s[4],r_s[4],s_s[4],pg[4]; /* åˆ›å»ºæ•°å€¼å‚¨å­˜*/
 
   in_file.seekg(0,ios::beg);
   in_file.read(boot.magic,8);
@@ -104,12 +104,12 @@ void un_pack(char *file) {
   in_file.read(boot.name,16);
   in_file.read(boot.cmdline,512);
 
-  memcpy(&boot.kernel_size, k_s, 4); /* Ğ¡¶Ë¶ÁÈ¡ */
+  memcpy(&boot.kernel_size, k_s, 4); /* å°ç«¯è¯»å– */
   memcpy(&boot.ramdisk_size, r_s, 4);
   memcpy(&boot.second_size, s_s, 4);
   memcpy(&boot.page_size, pg, 4);
 
-  /* Ğ´Èë±ØÒªÅäÖÃÎÄ¼ş£¬ÖØĞÂ´ò°üĞèÒª */
+  /* å†™å…¥å¿…è¦é…ç½®æ–‡ä»¶ï¼Œé‡æ–°æ‰“åŒ…éœ€è¦ */
   config.seekp(0, ios::beg);
   config.write(boot.magic,8);
   config.write(boot.kernel_addr,4);
@@ -127,13 +127,13 @@ void un_pack(char *file) {
     "\033[7mpage size:\033[0m  " << boot.page_size << "\nCmdline: " << boot.cmdline << endl;
 
   in_file.seekg(2048, ios::beg);
-  /* ¿ªÊ¼¶ÁÈ¡kernel */
+  /* å¼€å§‹è¯»å–kernel */
   char *kernel_buff = new char[boot.kernel_size];
   out_kernel.seekp(0, ios::beg);
   in_file.read(kernel_buff, boot.kernel_size);
   out_kernel.write(kernel_buff, boot.kernel_size);
   delete[]kernel_buff;
-  /* ¿ªÊ¼¶ÁÈ¡RamDisk */
+  /* å¼€å§‹è¯»å–RamDisk */
   int ramdisk_addr = (((boot.kernel_size + boot.page_size) / (boot.page_size * 2)) + 1) * (boot.page_size * 2);
   in_file.seekg(ramdisk_addr, ios::beg);
   char *ramdisk_buff = new char[boot.ramdisk_size];
@@ -141,7 +141,7 @@ void un_pack(char *file) {
   in_file.read(ramdisk_buff, boot.ramdisk_size);
   out_ramdisk.write(ramdisk_buff, boot.ramdisk_size);
   delete[]ramdisk_buff;
-  /*¿ªÊ¼¶ÁÈ¡second_stage*/
+  /*å¼€å§‹è¯»å–second_stage*/
   int second_addr = (((ramdisk_addr + boot.ramdisk_size) / (boot.page_size * 2)) + 1) * (boot.page_size * 2);
   in_file.seekg(second_addr, ios::beg);
   char *second_buff = new char[boot.second_size];
@@ -163,7 +163,7 @@ void re_pack(char *file) {
   char k_s[4], r_s[4],s_s[4],pg[4];
   char magic[] = { 0x41, 0x4E, 0x44, 0x52, 0x4F, 0x49, 0x44, 0x21 };
   
-  cout << "Finding Config file¡­" << flush;
+  cout << "Finding Config fileâ€¦" << flush;
   config.open("config",ios::in | ios::binary);
   if (!config) {
     cerr <<
@@ -174,7 +174,7 @@ void re_pack(char *file) {
     cout << "   [OK]" << endl;
   }
 
-  //¶ÁÈ¡ÅäÖÃÎÄ¼ş£¬½¨Á¢½á¹¹Ìå
+  //è¯»å–é…ç½®æ–‡ä»¶ï¼Œå»ºç«‹ç»“æ„ä½“
   config.seekg(0,ios::beg);
   config.read(boot.magic,8);
   config.read(boot.kernel_addr,4);
@@ -185,11 +185,11 @@ void re_pack(char *file) {
   config.read(boot.unused,8);
   config.read(boot.name,16);
   config.read(boot.cmdline,512);
-  //¶ÁÈ¡Íê±Ï£¬½á¹¹ÌåÒÑ½¨Á¢ 
+  //è¯»å–å®Œæ¯•ï¼Œç»“æ„ä½“å·²å»ºç«‹ 
 
   
 
-  cout << "Finding kernel¡­" << flush;
+  cout << "Finding kernelâ€¦" << flush;
   in_kernel.open("kernel", ios::in | ios::binary);
   if (!in_kernel) {
     cerr <<
@@ -204,7 +204,7 @@ void re_pack(char *file) {
   }
   
 
-  cout << "Finding ramdisk.gz¡­" << flush;
+  cout << "Finding ramdisk.gzâ€¦" << flush;
   in_ramdisk.open("ramdisk.gz", ios::in | ios::binary);
   if (!in_ramdisk) {
     cerr <<
@@ -219,7 +219,7 @@ void re_pack(char *file) {
   }
  
 
-  cout << "Finding second stage¡­" << flush;
+  cout << "Finding second stageâ€¦" << flush;
   in_second.open("second_stage", ios::in | ios::binary);
   if (!in_second) {
     cerr <<
@@ -236,7 +236,7 @@ void re_pack(char *file) {
   memcpy(r_s,&boot.ramdisk_size, 4);
   memcpy(s_s,&boot.second_size, 4);
   memcpy(&boot.page_size, pg, 4);
-  //´´½¨ÎÄ¼şÍ·
+  //åˆ›å»ºæ–‡ä»¶å¤´
   out_file.open(file,ios::out | ios::binary);
   out_file.seekg(0,ios::beg);
   out_file.write(boot.magic,8);
@@ -252,7 +252,7 @@ void re_pack(char *file) {
   out_file.write(boot.name,16);
   out_file.write(boot.cmdline,512);
 
-  //¿ªÊ¼Ğ´Èëkernel
+  //å¼€å§‹å†™å…¥kernel
   char *kernel_buff = new char[boot.kernel_size];
   in_kernel.seekg(0,ios::beg);
   in_kernel.read(kernel_buff,boot.kernel_size);
@@ -262,7 +262,7 @@ void re_pack(char *file) {
 
   int ramdisk_addr = (((boot.kernel_size + boot.page_size)/ (boot.page_size * 2)) + 1) * (boot.page_size * 2);
 
-  //¿ªÊ¼Ğ´Èëramdisk
+  //å¼€å§‹å†™å…¥ramdisk
   char *ramdisk_buff = new char[boot.ramdisk_size];
   in_ramdisk.seekg(0,ios::beg);
   in_ramdisk.read(ramdisk_buff,boot.ramdisk_size);
@@ -271,7 +271,7 @@ void re_pack(char *file) {
   delete []ramdisk_buff;
 
   int second_addr = ((( boot.ramdisk_size / (boot.page_size * 2)) + 1) * (boot.page_size * 2)) + ramdisk_addr;
-  //¿ªÊ¼Ğ´Èësecond stage
+  //å¼€å§‹å†™å…¥second stage
   char *second_buff = new char[boot.second_size];
   in_second.seekg(0,ios::beg);
   in_second.read(second_buff,boot.second_size);
