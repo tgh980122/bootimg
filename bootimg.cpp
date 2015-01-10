@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * boot.img操作
  * -u in_file。解压boot.img
  * -r out_file。重新打包
@@ -10,7 +10,6 @@
 
 #include <fstream>
 #include <iostream>
-#include <cstdio>
 #include <cstring>
 #include <cstdlib>
 
