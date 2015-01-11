@@ -1,5 +1,7 @@
 ﻿#boot.img操作
 
+##联系我
+邮箱:tyan-boot@outlook.com
 
 ##基本参数
 
